@@ -1,10 +1,11 @@
 import json
 import os
 from pathlib import Path
-from scGeneFit.functions import get_markers
+from scGeneFit.functions import get_markers, get_markers_hierarchy
 
 import jsbeautifier
 import numpy as np
+from RankCorr.picturedRocks import Rocks
 import pandas as pd
 from mrmr import mrmr_classif
 from sklearn.feature_selection import (SelectFromModel, f_classif,
@@ -222,19 +223,70 @@ def fit_and_dump_scGeneFit(
     json_filename="report.json",
     feature_importances_filename="feature_importances_.txt",
     write_suffix='',
+    redundancy=0.1,
+    epsilon=1,
 ):
     """Fits and stores the results of scGeneFit.
     """
     basedir = Path(root) / ('scGeneFit' + write_suffix)
     os.makedirs(basedir, exist_ok=True)
 
+    if isinstance(key, list):
+        labels = []
+        for k in key:
+            labels.append(data.obs[k].to_numpy())
+        labels = np.vstack(labels)
+        func = get_markers_hierarchy
+    else:
+        labels = data.obs[key].to_numpy()
+        func = get_markers
+
     print("Fitting scGeneFit.")
     for cov, max_feats in zip(coverage_list, max_features_list):
-        solution = get_markers(data.X, data.obs[key], max_feats)
+        solution = func(
+            data.X, labels, max_feats, redundancy=redundancy, epsilon=epsilon)
 
         dump(
             features=solution,
             dict_key=cov,
+            json_path=basedir / json_filename,
+            extras={
+                **extras,
+                'n_features': len(solution),
+            }
+        )
+
+
+def fit_and_dump_RankCorr(
+    *,
+    root,
+    coverage_list,
+    max_features_list,
+    data=None,
+    key=None,
+    check_if_fitted=True,
+    extras={},
+    json_filename="report.json",
+    feature_importances_filename="feature_importances_.txt",
+    write_suffix='',
+    lamb_list=list(range(1, 13)),
+):
+    """Fits and stores the results of RankCorr.
+    """
+    basedir = Path(root) / ('RankCorr' + write_suffix)
+    os.makedirs(basedir, exist_ok=True)
+
+    print("Fitting RankCorr.")
+    le = LabelEncoder()
+    labels = le.fit_transform(data.obs[key].to_numpy()).astype(int)
+    r = Rocks(data.X, labels)
+
+    for lamb in lamb_list:
+        solution = r.CSrankMarkers(lamb=lamb)
+
+        dump(
+            features=np.array(solution).tolist(),
+            dict_key=str(lamb),
             json_path=basedir / json_filename,
             extras={
                 **extras,

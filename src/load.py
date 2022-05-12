@@ -33,6 +33,10 @@ def dataset(
         adata = anndata.read_h5ad('data/MC.h5ad')
         print(f"{len(np.unique(adata.obs['celltype']))} unique cell types.")
         key = 'celltype'
+    elif name == 'MCT':
+        adata = anndata.read_h5ad('/home/ehasanaj/data/CompBio/ZeiselTrimmed.h5ad')
+        print(f"{len(np.unique(adata.obs['celltype']))} unique cell types.")
+        key = 'celltype'
     else:
         raise ValueError("Dataset not found.")
 
@@ -48,6 +52,10 @@ def dataset(
     if name == "HCA" and high_var:
         hehv = np.genfromtxt('data/he-hv.txt', dtype='str')
         adata = adata[:, hehv]
+        high_var = False
+    elif name == "MC" and high_var:
+        mchv = np.genfromtxt('data/mc-hv.txt', dtype='str')
+        adata = adata[:, mchv]
         high_var = False
     if high_var:
         sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.2)

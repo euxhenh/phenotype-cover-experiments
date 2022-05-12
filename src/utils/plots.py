@@ -106,9 +106,13 @@ def line_plot(
     markers = ['o', '.', 'x', '*', '>', '|', 'X', '1', ',', 'd', 'p', '-']
     linestyles = np.tile(['-', '--', ':', '-.'], 3)
     if palette == 'qualitative':
-        pal = cm.get_cmap('Dark2').colors
-    else:
+        pal = list(cm.get_cmap('Dark2').colors)
+        pal_buf = cm.get_cmap('tab10').colors
+        pal.extend([pal_buf[3], pal_buf[-1]])
+    elif palette == 'sequential':
         pal = sns.color_palette("magma", n_colors=len(xlist))
+    else:
+        pal = sns.color_palette(palette, n_colors=len(xlist))
 
     if len(xlist) > len(pal):
         raise ValueError("More lines than colors.")
@@ -197,19 +201,19 @@ def dotplot(
 
     if ax is None:
         fig, ax = plt.subplots()
-        
+
     shapes = [
         plt.Circle,
         partial(RegularPolygon, numVertices=3),
         partial(RegularPolygon, numVertices=4)]
-   
+
     circles = [
         shapes[i%len(shapes)]((i, j),
         color = get_col_i(pal, i) if colorrow else get_col_i(pal, j),
         radius=r / (2 * max_rad) if radius is None else radius)
         for r, i, j in zip(X.flat, x.flat, y.flat)]
 
-    
+
 #     circles = []
 #     for r, i, j in zip(X.flat, x.flat, y.flat):
 #         func = shapes[j % len(shapes)] if colorrow else shapes[i % len(shapes)]
