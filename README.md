@@ -15,6 +15,10 @@ separate package <https://github.com/euxhenh/phenotype-cover> and can be install
 ```
 pip install phenotype_cover
 ```
+The algorithm for running multiset multicover can be found at <https://github.com/euxhenh/multiset-multicover> and can be installed with
+```
+pip install multiset-multicover
+```
 
 The IPF, HCA, MC datasets can be found from the respective papers. For
 convenience, we have made them available for download as `h5ad` files:
@@ -24,3 +28,8 @@ convenience, we have made them available for download as `h5ad` files:
 * MC: <https://drive.google.com/file/d/1Jp2OT0B2prFk_k4ZGr_DysLGwBDAwvui/view?usp=sharing>
 
 Store the files under `data`.
+
+Finally, clone the `RankCorr` repository by running the following at the root of this repo
+```
+git clone https://github.com/ahsv/RankCorr
+```
