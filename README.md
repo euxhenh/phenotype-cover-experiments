@@ -1,3 +1,7 @@
+This repository contains the code for the experiments in the paper:
+"`Multiset multicover methods for discriminative marker selection <https://www.cell.com/cell-reports-methods/fulltext/S2667-2375(22)00229-6>`_".
+
+
 To select features, first run all cells in `FeatureSelection.ipynb`.
 This will create a folder `DAT` for each dataset under `data/DAT`.
 For each random seed x, the results will be saved under `data/DAT/RS/rsx`
