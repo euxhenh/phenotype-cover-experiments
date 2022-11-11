@@ -1,5 +1,5 @@
 This repository contains the code for the experiments in the paper:
-"`Multiset multicover methods for discriminative marker selection <https://www.cell.com/cell-reports-methods/fulltext/S2667-2375(22)00229-6>`_".
+"<a href="https://www.cell.com/cell-reports-methods/fulltext/S2667-2375(22)00229-6" target="_blank">Multiset multicover methods for discriminative marker selection</a>".
 
 
 To select features, first run all cells in `FeatureSelection.ipynb`.
